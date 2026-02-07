@@ -32,7 +32,16 @@
         .grammar-card h4 { margin: 0 0 8px 0; color: var(--btn); font-size: 17px; display: flex; align-items: center; }
         .grammar-card h4::before { content: "•"; margin-right: 8px; font-size: 20px; }
         .grammar-card code { display: block; background: rgba(0,0,0,0.05); padding: 8px; border-radius: 6px; margin: 8px 0; font-size: 13px; color: #d63384; border-left: 3px solid #d63384; }
-        .grammar-card i { color: var(--hint); font-size: 13px; }
+        .grammar-card i { 
+            display: block;
+            color: var(--text); 
+            font-size: 14px; 
+            opacity: 0.9; 
+            border-left: 2px solid var(--btn);
+            padding-left: 8px;
+            margin-top: 5px;
+            font-style: italic;
+            }
 
         /* Словарь */
         .input-group { background: var(--sec-bg); padding: 15px; border-radius: 15px; margin-bottom: 20px; }
@@ -78,7 +87,7 @@
             </div>
             <div class="grammar-card">
                 <h4>Perfect Continuous</h4>
-                <p>Длилось и всё еще идет.</p>
+                <p>Началось тогда и всё еще идет.</p>
                 <code>I/You/We/They + have || He/She/It + has + been + V-ing</code>
                 <i>I have been studying for 2 hours.</i>
             </div>
