@@ -12,7 +12,8 @@
         .hidden { display: none; }
         .nav { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
         .nav span { cursor: pointer; font-weight: bold; }
-        .card { background: rgba(0,0,0,0.05); padding: 10px; margin-bottom: 10px; border-radius: 8px; }
+        .card { background: rgba(0,0,0,0.05); padding: 10px; margin-bottom: 10px; border-radius: 8px; position: relative; }
+        .delete-btn { position: absolute; right: 10px; top: 10px; color: #f44336; cursor: pointer; font-size: 12px; }
         h3 { margin-top: 0; }
     </style>
 </head>
@@ -41,14 +42,14 @@
             <p>Действие произойдет в будущем.</p>
             <code>I will work</code>
         </div>
-        </div>
+    </div>
 
     <div id="words" class="hidden">
         <h2>Мой словарь</h2>
         <input type="text" id="engInput" placeholder="Слово на английском">
         <input type="text" id="ruInput" placeholder="Перевод">
-        <button class="btn" onclick="addWord()">Добавить в список</button>
-        <div id="wordList" style="margin-top: 20px;"></div>
+        <button class="btn" onclick="addWord()">Добавить в облако</button>
+        <div id="wordList" style="margin-top: 20px;">Загрузка слов...</div>
     </div>
 
     <div id="test" class="hidden">
@@ -61,12 +62,18 @@
     </div>
 
     <script>
+
+        
+        const DB_URL = 'https://english-teach-tg-bot-default-rtdb.firebaseio.com/'; 
+        
         let tg = window.Telegram.WebApp;
         tg.expand();
+        
+        
+        const userId = tg.initDataUnsafe.user?.id || "local_user";
+        let words = [];
 
-    
-        let words = JSON.parse(localStorage.getItem('myWords')) || [];
-
+        
         function showTab(tabId) {
             document.querySelectorAll('body > div:not(.nav)').forEach(el => el.classList.add('hidden'));
             document.getElementById(tabId).classList.remove('hidden');
@@ -74,36 +81,66 @@
             if(tabId === 'test') startTest();
         }
 
-        function addWord() {
+        
+        async function addWord() {
             let eng = document.getElementById('engInput').value;
             let ru = document.getElementById('ruInput').value;
             if (eng && ru) {
-                words.push({ en: eng, ru: ru });
-                localStorage.setItem('myWords', JSON.stringify(words));
+                const newWord = { en: eng, ru: ru };
+
+                
+                await fetch(`${DB_URL}users/${userId}/words.json`, {
+                    method: 'POST',
+                    body: JSON.stringify(newWord)
+                });
+
                 document.getElementById('engInput').value = '';
                 document.getElementById('ruInput').value = '';
-                renderWords();
+                await renderWords();
             }
         }
 
-        function renderWords() {
-            let list = document.getElementById('wordList');
-            list.innerHTML = words.map(w => `<div class="card"><b>${w.en}</b> — ${w.ru}</div>`).join('');
+        async function renderWords() {
+            const list = document.getElementById('wordList');
+            try {
+                const response = await fetch(`${DB_URL}users/${userId}/words.json`);
+                const data = await response.json();
+                
+                words = [];
+                list.innerHTML = '';
+
+                if (data) {
+
+                    Object.keys(data).forEach(key => {
+                        words.push({ id: key, ...data[key] });
+                    });
+
+                    list.innerHTML = words.map(w => `
+                        <div class="card">
+                            <b>${w.en}</b> — ${w.ru}
+                        </div>
+                    `).join('');
+                } else {
+                    list.innerHTML = 'В словаре пока пусто.';
+                }
+            } catch (e) {
+                list.innerHTML = 'Ошибка загрузки базы.';
+            }
         }
 
+        // --- ТЕСТ ---
         function startTest() {
             if (words.length < 3) {
-                document.getElementById('testArea').innerHTML = "<p>Добавьте минимум 3 слова в словарь!</p>";
+                document.getElementById('testArea').innerHTML = "<p>Добавьте минимум 3 слова!</p>";
                 return;
             }
             
             let correct = words[Math.floor(Math.random() * words.length)];
-            
-            
             let options = [correct];
+            
             while(options.length < 3) {
                 let random = words[Math.floor(Math.random() * words.length)];
-                if (!options.includes(random)) options.push(random);
+                if (!options.find(o => o.id === random.id)) options.push(random);
             }
             
             options.sort(() => Math.random() - 0.5);
@@ -116,14 +153,16 @@
 
         function checkAnswer(selected, correct, btn) {
             if (selected === correct) {
-                btn.style.background = '#4caf50'; // Зеленый
+                btn.style.background = '#4caf50';
                 btn.style.color = '#fff';
-                tg.showPopup({message: 'Правильно! Молодец!'});
+                tg.showPopup({message: 'Правильно!'});
             } else {
-                btn.style.background = '#f44336'; // Красный
+                btn.style.background = '#f44336';
                 btn.style.color = '#fff';
             }
         }
+
+        renderWords();
     </script>
 </body>
 </html>
