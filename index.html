@@ -54,16 +54,115 @@
         <span id="nav-test" onclick="showTab('test')">Тест</span>
     </div>
 
+    <div class="nav">
+        <span id="nav-grammar" class="active" onclick="showTab('grammar')">Грамматика</span>
+        <span id="nav-words" onclick="showTab('words')">Словарь</span>
+        <span id="nav-test" onclick="showTab('test')">Тест</span>
+    </div>
+
     <div id="grammar">
         <h2>Грамматика (16)</h2>
+
         <div class="category" onclick="toggleFolder('pres-folder')">PRESENT (Настоящее) <span>▼</span></div>
         <div id="pres-folder" class="subcategory-list hidden">
-            <div class="grammar-card"><h4>Simple</h4><p>Факт.</p><code>I/You/We/They + V || He/She/It + V-s</code><i>I study every day.</i></div>
-            <div class="grammar-card"><h4>Continuous</h4><p>Сейчас.</p><code>am/is/are + V-ing</code><i>I am studying now.</i></div>
-            <div class="grammar-card"><h4>Perfect</h4><p>Результат.</p><code>have/has + V3</code><i>I have studied already.</i></div>
-            <div class="grammar-card"><h4>Perfect Continuous</h4><p>Длилось и идет.</p><code>have been + V-ing</code><i>I have been studying for 2 hours.</i></div>
+            <div class="grammar-card">
+                <h4>Simple</h4>
+                <p>Факт или привычка.</p>
+                <code>I/You/We/They + V || He/She/It + V-s</code>
+                <i>I study every day || He studies every day</i>
+            </div>
+            <div class="grammar-card">
+                <h4>Continuous</h4>
+                <p>Сейчас происходит.</p>
+                <code>I + am || He/She/It + is || You/We/They + are + V-ing</code>
+                <i>I am studying now.</i>
+            </div>
+            <div class="grammar-card">
+                <h4>Perfect</h4>
+                <p>Результат к настоящему моменту.</p>
+                <code>I/You/We/They + have || He/She/It + has + V3</code>
+                <i>I have studied already.</i>
+            </div>
+            <div class="grammar-card">
+                <h4>Perfect Continuous</h4>
+                <p>Началось тогда и всё еще идет.</p>
+                <code>I/You/We/They + have || He/She/It + has + been + V-ing</code>
+                <i>I have been studying for 2 hours.</i>
+            </div>
         </div>
+
+        <div class="category" onclick="toggleFolder('past-folder')">PAST (Прошлое) <span>▼</span></div>
+        <div id="past-folder" class="subcategory-list hidden">
+            <div class="grammar-card">
+                <h4>Simple</h4>
+                <p>Завершено в прошлом.</p>
+                <code>I/He/She/It/You/We/They + V2 (-ed)</code>
+                <i>I studied yesterday.</i>
+            </div>
+            <div class="grammar-card">
+                <h4>Continuous</h4>
+                <p>Процесс в конкретный момент прошлого.</p>
+                <code>I/He/She/It + was || You/We/They + were + V-ing</code>
+                <i>I was studying at 5 PM.</i>
+            </div>
+            <div class="grammar-card">
+                <h4>Perfect</h4>
+                <p>Случилось до другого события в прошлом.</p>
+                <code>All subjects + had + V3</code>
+                <i>I had studied before he arrived.</i>
+            </div>
+            <div class="grammar-card">
+                <h4>Perfect Continuous</h4>
+                <p>Длилось до определенного момента в прошлом.</p>
+                <code>All subjects + had been + V-ing</code>
+                <i>I had been studying for an hour when she called.</i>
+            </div>
         </div>
+
+        <div class="category" onclick="toggleFolder('fut-folder')">FUTURE (Будущее) <span>▼</span></div>
+        <div id="fut-folder" class="subcategory-list hidden">
+            <div class="grammar-card">
+                <h4>Simple</h4>
+                <p>Прогноз или решение.</p>
+                <code>All subjects + will + V</code>
+                <i>I will study tomorrow.</i>
+            </div>
+            <div class="grammar-card">
+                <h4>Continuous</h4>
+                <p>Процесс в будущем.</p>
+                <code>All subjects + will be + V-ing</code>
+                <i>I will be studying all night.</i>
+            </div>
+            <div class="grammar-card">
+                <h4>Perfect</h4>
+                <p>Будет завершено к сроку.</p>
+                <code>All subjects + will have + V3</code>
+                <i>I will have studied by 6 PM.</i>
+            </div>
+            <div class="grammar-card">
+                <h4>Perfect Continuous</h4>
+                <p>Длительность к моменту в будущем.</p>
+                <code>All subjects + will have been + V-ing</code>
+                <i>I will have been studying for 5 years in 2026.</i>
+            </div>
+        </div>
+
+        <div class="category" onclick="toggleFolder('fip-folder')">FUTURE IN THE PAST <span>▼</span></div>
+        <div id="fip-folder" class="subcategory-list hidden">
+            <div class="grammar-card">
+                <h4>Simple</h4><p>Будущее из прошлого.</p><code>would + V</code><i>I said I would study.</i>
+            </div>
+            <div class="grammar-card">
+                <h4>Continuous</h4><code>would be + V-ing</code><i>He said he would be studying.</i>
+            </div>
+            <div class="grammar-card">
+                <h4>Perfect</h4><code>would have + V3</code><i>I would have studied.</i>
+            </div>
+            <div class="grammar-card">
+                <h4>Perfect Continuous</h4><code>would have been + V-ing</code><i>I would have been studying.</i>
+            </div>
+        </div>
+    </div>
 
     <div id="words" class="hidden">
         <h2>Мой словарь</h2>
