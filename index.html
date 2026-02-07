@@ -6,47 +6,36 @@
     <title>English Bot App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: sans-serif; background-color: var(--tg-theme-bg-color, #fff); color: var(--tg-theme-text-color, #000); padding: 20px; }
-        .btn { background: var(--tg-theme-button-color, #3390ec); color: var(--tg-theme-button-text-color, #fff); border: none; padding: 10px 20px; border-radius: 8px; width: 100%; margin-top: 10px; cursor: pointer; }
-        input { width: 100%; padding: 10px; margin-top: 5px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; }
+        body { font-family: sans-serif; background-color: var(--tg-theme-bg-color, #fff); color: var(--tg-theme-text-color, #000); padding: 20px; margin: 0; }
+        .btn { background: var(--tg-theme-button-color, #3390ec); color: var(--tg-theme-button-text-color, #fff); border: none; padding: 12px; border-radius: 10px; width: 100%; margin-top: 10px; cursor: pointer; font-weight: bold; }
+        input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 10px; border: 1px solid #ccc; box-sizing: border-box; background: var(--tg-theme-secondary-bg-color, #f0f0f0); color: var(--tg-theme-text-color, #000); }
         .hidden { display: none; }
-        .nav { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
-        .nav span { cursor: pointer; font-weight: bold; }
-        .card { background: rgba(0,0,0,0.05); padding: 10px; margin-bottom: 10px; border-radius: 8px; position: relative; }
-        .delete-btn { position: absolute; right: 10px; top: 10px; color: #f44336; cursor: pointer; font-size: 12px; }
-        h3 { margin-top: 0; }
+        .nav { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding: 10px 0; position: sticky; top: 0; background: var(--tg-theme-bg-color, #fff); z-index: 10; }
+        .nav span { cursor: pointer; font-weight: bold; opacity: 0.6; }
+        .nav span.active { opacity: 1; border-bottom: 2px solid var(--tg-theme-button-color, #3390ec); }
+        .card { background: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.05)); padding: 15px; margin-bottom: 10px; border-radius: 12px; position: relative; border: 1px solid rgba(0,0,0,0.1); }
+        .delete-btn { position: absolute; right: 12px; top: 15px; color: #ff4d4d; cursor: pointer; font-size: 18px; font-weight: bold; padding: 5px; }
+        h2 { border-left: 4px solid var(--tg-theme-button-color, #3390ec); padding-left: 10px; }
     </style>
 </head>
 <body>
 
     <div class="nav">
-        <span onclick="showTab('grammar')">Грамматика</span>
-        <span onclick="showTab('words')">Словарь</span>
-        <span onclick="showTab('test')">Тест</span>
+        <span id="nav-grammar" class="active" onclick="showTab('grammar')">Грамматика</span>
+        <span id="nav-words" onclick="showTab('words')">Словарь</span>
+        <span id="nav-test" onclick="onclick="showTab('test')">Тест</span>
     </div>
 
     <div id="grammar">
-        <h2>Времена Английского</h2>
-        <div class="card">
-            <h3>Present Simple</h3>
-            <p>Действия, происходящие регулярно.</p>
-            <code>I work, He works</code>
-        </div>
-        <div class="card">
-            <h3>Past Simple</h3>
-            <p>Действие произошло в прошлом.</p>
-            <code>I worked, I went</code>
-        </div>
-        <div class="card">
-            <h3>Future Simple</h3>
-            <p>Действие произойдет в будущем.</p>
-            <code>I will work</code>
-        </div>
+        <h2>Грамматика</h2>
+        <div class="card"><h3>Present Simple</h3><p>Регулярные действия.<br><code>I study English every day.</code></p></div>
+        <div class="card"><h3>Past Simple</h3><p>Завершенные действия в прошлом.<br><code>I studied English yesterday.</code></p></div>
+        <div class="card"><h3>Future Simple</h3><p>Будущие намерения.<br><code>I will study English tomorrow.</code></p></div>
     </div>
 
     <div id="words" class="hidden">
         <h2>Мой словарь</h2>
-        <input type="text" id="engInput" placeholder="Слово на английском">
+        <input type="text" id="engInput" placeholder="English word">
         <input type="text" id="ruInput" placeholder="Перевод">
         <button class="btn" onclick="addWord()">Добавить в облако</button>
         <div id="wordList" style="margin-top: 20px;">Загрузка слов...</div>
@@ -55,83 +44,84 @@
     <div id="test" class="hidden">
         <h2>Проверка знаний</h2>
         <div id="testArea">
-            <h1 id="questionWord" style="text-align: center;">...</h1>
+            <h1 id="questionWord" style="text-align: center; font-size: 40px;">...</h1>
             <div id="answers"></div>
         </div>
-        <button class="btn" onclick="startTest()">Следующий вопрос</button>
+        <button class="btn" onclick="startTest()" style="background: none; color: var(--tg-theme-button-color, #3390ec); border: 1px solid;">Пропустить</button>
     </div>
 
     <script>
-
-        
+        // ТВОЯ ССЫЛКА ИЗ FIREBASE
         const DB_URL = 'https://englishteach-tg-bot-default-rtdb.europe-west1.firebasedatabase.app/'; 
         
         let tg = window.Telegram.WebApp;
         tg.expand();
         
-        
-        const userId = tg.initDataUnsafe.user?.id || "local_user";
+        const userId = tg.initDataUnsafe.user?.id || "test_user";
         let words = [];
 
-        
         function showTab(tabId) {
             document.querySelectorAll('body > div:not(.nav)').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav span').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById('nav-' + tabId).classList.add('active');
             if(tabId === 'words') renderWords();
             if(tabId === 'test') startTest();
         }
 
-        
+        // ДОБАВЛЕНИЕ
         async function addWord() {
-            let eng = document.getElementById('engInput').value;
-            let ru = document.getElementById('ruInput').value;
+            let eng = document.getElementById('engInput').value.trim();
+            let ru = document.getElementById('ruInput').value.trim();
             if (eng && ru) {
                 const newWord = { en: eng, ru: ru };
-
-                
                 await fetch(`${DB_URL}users/${userId}/words.json`, {
                     method: 'POST',
                     body: JSON.stringify(newWord)
                 });
-
                 document.getElementById('engInput').value = '';
                 document.getElementById('ruInput').value = '';
-                await renderWords();
+                renderWords();
             }
         }
 
+       
+        async function deleteWord(wordId) {
+            if (confirm("Удалить это слово?")) {
+                await fetch(`${DB_URL}users/${userId}/words/${wordId}.json`, { method: 'DELETE' });
+                renderWords();
+            }
+        }
+
+        
         async function renderWords() {
             const list = document.getElementById('wordList');
-            try {
-                const response = await fetch(`${DB_URL}users/${userId}/words.json`);
-                const data = await response.json();
-                
-                words = [];
-                list.innerHTML = '';
+            const response = await fetch(`${DB_URL}users/${userId}/words.json`);
+            const data = await response.json();
+            
+            words = [];
+            list.innerHTML = '';
 
-                if (data) {
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    words.push({ id: key, ...data[key] });
+                });
 
-                    Object.keys(data).forEach(key => {
-                        words.push({ id: key, ...data[key] });
-                    });
-
-                    list.innerHTML = words.map(w => `
-                        <div class="card">
-                            <b>${w.en}</b> — ${w.ru}
-                        </div>
-                    `).join('');
-                } else {
-                    list.innerHTML = 'В словаре пока пусто.';
-                }
-            } catch (e) {
-                list.innerHTML = 'Ошибка загрузки базы.';
+                list.innerHTML = words.map(w => `
+                    <div class="card">
+                        <b>${w.en}</b> — ${w.ru}
+                        <span class="delete-btn" onclick="deleteWord('${w.id}')">×</span>
+                    </div>
+                `).reverse().join(''); // Новые слова сверху
+            } else {
+                list.innerHTML = '<p style="text-align:center; opacity:0.5;">Ваш словарь пуст</p>';
             }
         }
 
-        // --- ТЕСТ ---
+        
         function startTest() {
             if (words.length < 3) {
-                document.getElementById('testArea').innerHTML = "<p>Добавьте минимум 3 слова!</p>";
+                document.getElementById('testArea').innerHTML = "<p style='text-align:center;'>Добавьте хотя бы 3 слова в словарь для начала теста!</p>";
                 return;
             }
             
@@ -147,7 +137,7 @@
 
             document.getElementById('questionWord').innerText = correct.en;
             document.getElementById('answers').innerHTML = options.map(opt => 
-                `<button class="btn" style="background: #efefef; color: #000; margin-bottom: 5px;" onclick="checkAnswer('${opt.ru}', '${correct.ru}', this)">${opt.ru}</button>`
+                `<button class="btn" style="background: var(--tg-theme-secondary-bg-color, #f0f0f0); color: var(--tg-theme-text-color, #000); margin-bottom: 8px;" onclick="checkAnswer('${opt.ru}', '${correct.ru}', this)">${opt.ru}</button>`
             ).join('');
         }
 
@@ -155,10 +145,11 @@
             if (selected === correct) {
                 btn.style.background = '#4caf50';
                 btn.style.color = '#fff';
-                tg.showPopup({message: 'Правильно!'});
+                setTimeout(() => { startTest(); }, 800);
             } else {
                 btn.style.background = '#f44336';
                 btn.style.color = '#fff';
+                btn.innerText = "Ошибка! Это " + correct;
             }
         }
 
