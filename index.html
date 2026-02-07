@@ -15,7 +15,7 @@
             --sec-bg: var(--tg-theme-secondary-bg-color, #f4f4f7);
         }
 
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); padding: 15px; margin: 0; line-height: 1.5; padding-bottom: 40px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); padding: 15px; margin: 0; line-height: 1.5; padding-bottom: 80px; }
         
         .nav { display: flex; justify-content: space-around; background: var(--bg); border-bottom: 1px solid rgba(0,0,0,0.1); padding: 10px 0; position: sticky; top: 0; z-index: 100; }
         .nav span { cursor: pointer; font-size: 14px; font-weight: 600; opacity: 0.5; transition: 0.3s; padding: 5px 10px; }
@@ -42,6 +42,12 @@
         .mode-btn { flex: 1; padding: 8px; text-align: center; font-size: 12px; cursor: pointer; border-radius: 8px; font-weight: bold; opacity: 0.6; }
         .mode-btn.active { background: var(--bg); color: var(--btn); opacity: 1; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
+        /* Чат стили */
+        #chat-container { display: flex; flex-direction: column; gap: 10px; padding-bottom: 20px; }
+        .msg { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 15px; line-height: 1.4; }
+        .msg.bot { align-self: flex-start; background: var(--sec-bg); border-bottom-left-radius: 2px; }
+        .msg.user { align-self: flex-end; background: var(--btn); color: var(--btn-text); border-bottom-right-radius: 2px; }
+
         .hidden { display: none; }
     </style>
 </head>
@@ -51,6 +57,7 @@
         <span id="nav-grammar" class="active" onclick="showTab('grammar')">Грамматика</span>
         <span id="nav-words" onclick="showTab('words')">Словарь</span>
         <span id="nav-test" onclick="showTab('test')">Тест</span>
+        <span id="nav-chat" onclick="showTab('chat')">Чат</span>
     </div>
 
     <div id="grammar">
@@ -168,6 +175,17 @@
         <button class="btn" onclick="startTest()" style="background: none; color: var(--btn); border: 1px solid var(--btn);">Пропустить</button>
     </div>
 
+    <div id="chat" class="hidden">
+        <h2>Practice Chat</h2>
+        <div id="chat-container">
+            <div class="msg bot">Hello! How are you doing today? Let's practice English.</div>
+        </div>
+        <div class="input-group" style="position: fixed; bottom: 0; left: 0; right: 0; margin-bottom: 0; border-radius: 0; z-index: 100;">
+            <input type="text" id="chatInput" placeholder="Type in English...">
+            <button class="btn" onclick="sendMessage()" style="margin-top: 5px;">Send</button>
+        </div>
+    </div>
+
     <script>
         const DB_URL = 'https://englishteach-tg-bot-default-rtdb.europe-west1.firebasedatabase.app/'; 
         let tg = window.Telegram.WebApp;
@@ -178,6 +196,7 @@
         let testQueue = [];
         let currentCorrect = "";
         let testMode = 'easy';
+        let hintIndex = 0;
 
         function showTab(tabId) {
             tg.HapticFeedback.impactOccurred('light');
@@ -246,6 +265,7 @@
             if (testQueue.length === 0) testQueue = [...words].sort(() => Math.random() - 0.5);
             let correct = testQueue.pop();
             currentCorrect = correct.ru;
+            hintIndex = 0; // Сброс подсказки
             document.getElementById('questionWord').innerText = correct.en;
 
             if (testMode === 'easy') {
@@ -259,6 +279,7 @@
             } else {
                 content.innerHTML = `
                     <input type="text" id="hardInput" placeholder="Введите перевод..." autocomplete="off">
+                    <div id="hintText" style="margin-top: 10px; color: var(--btn); font-weight: bold; min-height: 24px;"></div>
                     <button class="btn" onclick="checkHard()">Проверить</button>
                 `;
                 const inp = document.getElementById('hardInput');
@@ -280,18 +301,40 @@
 
         function checkHard() {
             const inp = document.getElementById('hardInput');
+            const hText = document.getElementById('hintText');
             const val = inp.value.trim().toLowerCase();
             const correct = currentCorrect.toLowerCase();
+
             if (val === correct) {
                 tg.HapticFeedback.notificationOccurred('success');
                 inp.style.border = "2px solid #4caf50";
+                hText.innerText = "Правильно!";
                 setTimeout(startTest, 600);
             } else {
                 tg.HapticFeedback.notificationOccurred('error');
                 inp.style.border = "2px solid #f44336";
+                hintIndex++;
+                hText.innerText = "Подсказка: " + currentCorrect.substring(0, hintIndex) + "...";
                 inp.value = "";
-                inp.placeholder = "Неверно!";
+                inp.placeholder = "Попробуй еще раз";
             }
+        }
+
+        function sendMessage() {
+            const inp = document.getElementById('chatInput');
+            const text = inp.value.trim();
+            if (!text) return;
+
+            const container = document.getElementById('chat-container');
+            container.innerHTML += `<div class="msg user">${text}</div>`;
+            inp.value = "";
+
+            setTimeout(() => {
+                const answers = ["That's interesting!", "Could you tell me more?", "I see. How long have you been studying?", "Great! Do you like English?", "Nice! Let's talk about hobbies."];
+                const reply = answers[Math.floor(Math.random() * answers.length)];
+                container.innerHTML += `<div class="msg bot">${reply}</div>`;
+                window.scrollTo(0, document.body.scrollHeight);
+            }, 1000);
         }
 
         renderWords();
