@@ -15,7 +15,7 @@
             --sec-bg: var(--tg-theme-secondary-bg-color, #f4f4f7);
         }
 
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); padding: 15px; margin: 0; line-height: 1.5; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); padding: 15px; margin: 0; line-height: 1.5; padding-bottom: 40px; }
         
         .nav { display: flex; justify-content: space-around; background: var(--bg); border-bottom: 1px solid rgba(0,0,0,0.1); padding: 10px 0; position: sticky; top: 0; z-index: 100; }
         .nav span { cursor: pointer; font-size: 14px; font-weight: 600; opacity: 0.5; transition: 0.3s; padding: 5px 10px; }
@@ -23,38 +23,25 @@
 
         h2 { font-size: 22px; margin: 20px 0 10px; }
 
-        /* Стильные папки */
         .category { background: linear-gradient(135deg, var(--btn), #50a7f9); color: var(--btn-text); padding: 16px; margin-top: 12px; border-radius: 12px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .subcategory-list { padding: 5px 0 15px 10px; border-left: 2px dashed var(--btn); margin-left: 10px; transition: all 0.3s ease; }
         
-        /* Карточки грамматики */
-        .grammar-card { background: var(--sec-bg); padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-        .grammar-card h4 { margin: 0 0 8px 0; color: var(--btn); font-size: 17px; display: flex; align-items: center; }
-        .grammar-card h4::before { content: "•"; margin-right: 8px; font-size: 20px; }
+        .grammar-card { background: var(--sec-bg); padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05); }
+        .grammar-card h4 { margin: 0 0 8px 0; color: var(--btn); font-size: 17px; }
         .grammar-card code { display: block; background: rgba(0,0,0,0.05); padding: 8px; border-radius: 6px; margin: 8px 0; font-size: 13px; color: #d63384; border-left: 3px solid #d63384; }
-        
-        /* Исправленный стиль примеров (ЯРКИЙ) */
-        .grammar-card i { 
-            display: block;
-            color: var(--text); 
-            font-size: 14px; 
-            opacity: 1; 
-            border-left: 3px solid var(--btn);
-            padding-left: 10px;
-            margin-top: 10px;
-            font-style: italic;
-            background: rgba(51, 144, 236, 0.05);
-            padding: 8px 10px;
-            border-radius: 0 8px 8px 0;
-        }
+        .grammar-card i { display: block; color: var(--text); font-size: 14px; border-left: 3px solid var(--btn); padding: 8px 10px; margin-top: 10px; font-style: italic; background: rgba(51, 144, 236, 0.05); border-radius: 0 8px 8px 0; }
 
-        /* Словарь */
         .input-group { background: var(--sec-bg); padding: 15px; border-radius: 15px; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1); box-sizing: border-box; font-size: 16px; }
-        .btn { background: var(--btn); color: var(--btn-text); border: none; padding: 14px; border-radius: 12px; width: 100%; margin-top: 15px; cursor: pointer; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(51, 144, 236, 0.3); }
+        input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1); box-sizing: border-box; font-size: 16px; background: var(--bg); color: var(--text); }
+        .btn { background: var(--btn); color: var(--btn-text); border: none; padding: 14px; border-radius: 12px; width: 100%; margin-top: 15px; cursor: pointer; font-weight: bold; font-size: 16px; }
         
         .word-card { background: var(--bg); padding: 15px; margin-bottom: 10px; border-radius: 12px; position: relative; border: 1px solid rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; }
         .delete-btn { color: #ff4d4d; font-size: 22px; padding: 5px 10px; cursor: pointer; }
+
+        /* Переключатель режима теста */
+        .mode-switch { display: flex; background: var(--sec-bg); border-radius: 10px; padding: 4px; margin-bottom: 15px; }
+        .mode-btn { flex: 1; padding: 8px; text-align: center; font-size: 12px; cursor: pointer; border-radius: 8px; font-weight: bold; opacity: 0.6; }
+        .mode-btn.active { background: var(--bg); color: var(--btn); opacity: 1; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
         .hidden { display: none; }
     </style>
@@ -69,124 +56,39 @@
 
     <div id="grammar">
         <h2>Грамматика (16)</h2>
-
         <div class="category" onclick="toggleFolder('pres-folder')">PRESENT (Настоящее) <span>▼</span></div>
         <div id="pres-folder" class="subcategory-list hidden">
-            <div class="grammar-card">
-                <h4>Simple</h4>
-                <p>Факт или привычка.</p>
-                <code>I/You/We/They + V || He/She/It + V-s</code>
-                <i>I study every day || He studies every day</i>
-            </div>
-            <div class="grammar-card">
-                <h4>Continuous</h4>
-                <p>Сейчас происходит.</p>
-                <code>I + am || He/She/It + is || You/We/They + are + V-ing</code>
-                <i>I am studying now.</i>
-            </div>
-            <div class="grammar-card">
-                <h4>Perfect</h4>
-                <p>Результат к настоящему моменту.</p>
-                <code>I/You/We/They + have || He/She/It + has + V3</code>
-                <i>I have studied already.</i>
-            </div>
-            <div class="grammar-card">
-                <h4>Perfect Continuous</h4>
-                <p>Началось тогда и всё еще идет.</p>
-                <code>I/You/We/They + have || He/She/It + has + been + V-ing</code>
-                <i>I have been studying for 2 hours.</i>
-            </div>
+            <div class="grammar-card"><h4>Simple</h4><p>Факт.</p><code>I/You/We/They + V || He/She/It + V-s</code><i>I study every day.</i></div>
+            <div class="grammar-card"><h4>Continuous</h4><p>Сейчас.</p><code>am/is/are + V-ing</code><i>I am studying now.</i></div>
+            <div class="grammar-card"><h4>Perfect</h4><p>Результат.</p><code>have/has + V3</code><i>I have studied already.</i></div>
+            <div class="grammar-card"><h4>Perfect Continuous</h4><p>Длилось и идет.</p><code>have been + V-ing</code><i>I have been studying for 2 hours.</i></div>
         </div>
-
-        <div class="category" onclick="toggleFolder('past-folder')">PAST (Прошлое) <span>▼</span></div>
-        <div id="past-folder" class="subcategory-list hidden">
-            <div class="grammar-card">
-                <h4>Simple</h4>
-                <p>Завершено в прошлом.</p>
-                <code>I/He/She/It/You/We/They + V2 (-ed)</code>
-                <i>I studied yesterday.</i>
-            </div>
-            <div class="grammar-card">
-                <h4>Continuous</h4>
-                <p>Процесс в конкретный момент прошлого.</p>
-                <code>I/He/She/It + was || You/We/They + were + V-ing</code>
-                <i>I was studying at 5 PM.</i>
-            </div>
-            <div class="grammar-card">
-                <h4>Perfect</h4>
-                <p>Случилось до другого события в прошлом.</p>
-                <code>All subjects + had + V3</code>
-                <i>I had studied before he arrived.</i>
-            </div>
-            <div class="grammar-card">
-                <h4>Perfect Continuous</h4>
-                <p>Длилось до определенного момента в прошлом.</p>
-                <code>All subjects + had been + V-ing</code>
-                <i>I had been studying for an hour when she called.</i>
-            </div>
         </div>
-
-        <div class="category" onclick="toggleFolder('fut-folder')">FUTURE (Будущее) <span>▼</span></div>
-        <div id="fut-folder" class="subcategory-list hidden">
-            <div class="grammar-card">
-                <h4>Simple</h4>
-                <p>Прогноз или решение.</p>
-                <code>All subjects + will + V</code>
-                <i>I will study tomorrow.</i>
-            </div>
-            <div class="grammar-card">
-                <h4>Continuous</h4>
-                <p>Процесс в будущем.</p>
-                <code>All subjects + will be + V-ing</code>
-                <i>I will be studying all night.</i>
-            </div>
-            <div class="grammar-card">
-                <h4>Perfect</h4>
-                <p>Будет завершено к сроку.</p>
-                <code>All subjects + will have + V3</code>
-                <i>I will have studied by 6 PM.</i>
-            </div>
-            <div class="grammar-card">
-                <h4>Perfect Continuous</h4>
-                <p>Длительность к моменту в будущем.</p>
-                <code>All subjects + will have been + V-ing</code>
-                <i>I will have been studying for 5 years in 2026.</i>
-            </div>
-        </div>
-
-        <div class="category" onclick="toggleFolder('fip-folder')">FUTURE IN THE PAST <span>▼</span></div>
-        <div id="fip-folder" class="subcategory-list hidden">
-            <div class="grammar-card">
-                <h4>Simple</h4><p>Будущее из прошлого.</p><code>would + V</code><i>I said I would study.</i>
-            </div>
-            <div class="grammar-card">
-                <h4>Continuous</h4><code>would be + V-ing</code><i>He said he would be studying.</i>
-            </div>
-            <div class="grammar-card">
-                <h4>Perfect</h4><code>would have + V3</code><i>I would have studied.</i>
-            </div>
-            <div class="grammar-card">
-                <h4>Perfect Continuous</h4><code>would have been + V-ing</code><i>I would have been studying.</i>
-            </div>
-        </div>
-    </div>
 
     <div id="words" class="hidden">
         <h2>Мой словарь</h2>
         <div class="input-group">
             <input type="text" id="engInput" placeholder="English word...">
             <input type="text" id="ruInput" placeholder="Перевод...">
-            <button class="btn" onclick="addWord()">Добавить в список</button>
+            <button class="btn" onclick="addWord()">Добавить</button>
         </div>
         <div id="wordList"></div>
     </div>
 
     <div id="test" class="hidden">
-        <h2 style="text-align: center;">Тренировка</h2>
-        <div id="testArea" style="background: var(--sec-bg); padding: 30px; border-radius: 20px; text-align: center;">
-            <h1 id="questionWord" style="font-size: 36px; margin-bottom: 20px;">...</h1>
-            <div id="answers"></div>
+        <h2>Тренировка</h2>
+        
+        <div class="mode-switch">
+            <div id="mode-easy" class="mode-btn active" onclick="setMode('easy')">Выбор</div>
+            <div id="mode-hard" class="mode-btn" onclick="setMode('hard')">Письмо (Hard)</div>
         </div>
+
+        <div id="testArea" style="background: var(--sec-bg); padding: 25px; border-radius: 20px; text-align: center;">
+            <h1 id="questionWord" style="font-size: 32px; margin: 0 0 20px 0;">...</h1>
+            
+            <div id="testContent"></div>
+        </div>
+        
         <button class="btn" onclick="startTest()" style="background: none; color: var(--btn); border: 1px solid var(--btn);">Пропустить</button>
     </div>
 
@@ -197,7 +99,9 @@
         const userId = tg.initDataUnsafe.user?.id || "guest";
         
         let words = [];
-        let testQueue = []; // Очередь для теста без повторов
+        let testQueue = [];
+        let currentCorrect = "";
+        let testMode = 'easy'; // 'easy' или 'hard'
 
         function showTab(tabId) {
             tg.HapticFeedback.impactOccurred('light');
@@ -206,10 +110,14 @@
             document.getElementById(tabId).classList.remove('hidden');
             document.getElementById('nav-' + tabId).classList.add('active');
             if(tabId === 'words') renderWords();
-            if(tabId === 'test') {
-                testQueue = []; // Сбрасываем очередь при входе в тест
-                startTest();
-            }
+            if(tabId === 'test') { testQueue = []; startTest(); }
+        }
+
+        function setMode(mode) {
+            testMode = mode;
+            document.getElementById('mode-easy').classList.toggle('active', mode === 'easy');
+            document.getElementById('mode-hard').classList.toggle('active', mode === 'hard');
+            startTest();
         }
 
         function toggleFolder(id) {
@@ -221,10 +129,7 @@
             let eng = document.getElementById('engInput').value.trim();
             let ru = document.getElementById('ruInput').value.trim();
             if (eng && ru) {
-                await fetch(`${DB_URL}users/${userId}/words.json`, {
-                    method: 'POST',
-                    body: JSON.stringify({ en: eng, ru: ru })
-                });
+                await fetch(`${DB_URL}users/${userId}/words.json`, { method: 'POST', body: JSON.stringify({ en: eng, ru: ru }) });
                 tg.HapticFeedback.notificationOccurred('success');
                 document.getElementById('engInput').value = '';
                 document.getElementById('ruInput').value = '';
@@ -232,73 +137,83 @@
             }
         }
 
-        async function deleteWord(wordId) {
-            tg.showConfirm("Удалить слово?", async (ok) => {
-                if (ok) {
-                    await fetch(`${DB_URL}users/${userId}/words/${wordId}.json`, { method: 'DELETE' });
-                    tg.HapticFeedback.notificationOccurred('warning');
-                    renderWords();
-                }
-            });
-        }
-
         async function renderWords() {
             const list = document.getElementById('wordList');
             const response = await fetch(`${DB_URL}users/${userId}/words.json`);
             const data = await response.json();
             words = [];
-            list.innerHTML = '';
-            if (data) {
-                Object.keys(data).forEach(key => words.push({ id: key, ...data[key] }));
-                list.innerHTML = words.map(w => `
-                    <div class="word-card">
-                        <div><b>${w.en}</b><br><span style="color:var(--hint)">${w.ru}</span></div>
-                        <span class="delete-btn" onclick="deleteWord('${w.id}')">×</span>
-                    </div>
-                `).reverse().join('');
-            } else {
-                list.innerHTML = '<p style="text-align:center; opacity:0.5;">Словарь пуст</p>';
-            }
+            if (data) Object.keys(data).forEach(key => words.push({ id: key, ...data[key] }));
+            list.innerHTML = words.map(w => `
+                <div class="word-card">
+                    <div><b>${w.en}</b><br><span style="color:var(--hint)">${w.ru}</span></div>
+                    <span class="delete-btn" onclick="deleteWord('${w.id}')">×</span>
+                </div>
+            `).reverse().join('') || '<p style="text-align:center; opacity:0.5;">Пусто</p>';
         }
 
-        // ТЕСТ БЕЗ ПОВТОРОВ
+        async function deleteWord(wordId) {
+            tg.showConfirm("Удалить?", async (ok) => {
+                if (ok) {
+                    await fetch(`${DB_URL}users/${userId}/words/${wordId}.json`, { method: 'DELETE' });
+                    renderWords();
+                }
+            });
+        }
+
         function startTest() {
-            const area = document.getElementById('testArea');
+            const content = document.getElementById('testContent');
             if (words.length < 3) {
-                area.innerHTML = "<p>Добавь хотя бы 3 слова для начала теста!</p>";
+                content.innerHTML = "<p>Добавь хотя бы 3 слова!</p>";
                 return;
             }
 
-            // Если очередь пуста, наполняем её заново
-            if (testQueue.length === 0) {
-                testQueue = [...words].sort(() => Math.random() - 0.5);
-            }
-
-            // Достаем слово
+            if (testQueue.length === 0) testQueue = [...words].sort(() => Math.random() - 0.5);
             let correct = testQueue.pop();
-            
-            // Варианты ответов
-            let options = [correct];
-            let others = words.filter(w => w.id !== correct.id).sort(() => Math.random() - 0.5);
-            options.push(others[0], others[1]);
-            options.sort(() => Math.random() - 0.5);
-
+            currentCorrect = correct.ru;
             document.getElementById('questionWord').innerText = correct.en;
-            document.getElementById('answers').innerHTML = options.map(opt => 
-                `<button class="btn" style="background:var(--bg); color:var(--text); margin-bottom:10px; border:1px solid rgba(0,0,0,0.1);" onclick="checkAnswer('${opt.ru}', '${correct.ru}', this)">${opt.ru}</button>`
-            ).join('');
+
+            if (testMode === 'easy') {
+                // ЛЕГКИЙ РЕЖИМ (Кнопки)
+                let options = [correct];
+                let others = words.filter(w => w.id !== correct.id).sort(() => Math.random() - 0.5);
+                options.push(others[0], others[1]);
+                options.sort(() => Math.random() - 0.5);
+                content.innerHTML = options.map(opt => 
+                    `<button class="btn" style="background:var(--bg); color:var(--text); margin-bottom:10px;" onclick="checkEasy('${opt.ru}', this)">${opt.ru}</button>`
+                ).join('');
+            } else {
+                // СЛОЖНЫЙ РЕЖИМ (Инпут)
+                content.innerHTML = `
+                    <input type="text" id="hardInput" placeholder="Введите перевод..." autocomplete="off">
+                    <button class="btn" onclick="checkHard()">Проверить</button>
+                `;
+                document.getElementById('hardInput').focus();
+            }
         }
 
-        function checkAnswer(selected, correct, btn) {
-            if (selected === correct) {
+        function checkEasy(selected, btn) {
+            if (selected === currentCorrect) {
                 tg.HapticFeedback.notificationOccurred('success');
-                btn.style.background = '#4caf50';
-                btn.style.color = '#fff';
+                btn.style.background = '#4caf50'; btn.style.color = '#fff';
                 setTimeout(startTest, 600);
             } else {
                 tg.HapticFeedback.notificationOccurred('error');
-                btn.style.background = '#f44336';
-                btn.style.color = '#fff';
+                btn.style.background = '#f44336'; btn.style.color = '#fff';
+            }
+        }
+
+        function checkHard() {
+            const val = document.getElementById('hardInput').value.trim().toLowerCase();
+            const correct = currentCorrect.toLowerCase();
+            if (val === correct) {
+                tg.HapticFeedback.notificationOccurred('success');
+                document.getElementById('hardInput').style.border = "2px solid #4caf50";
+                setTimeout(startTest, 600);
+            } else {
+                tg.HapticFeedback.notificationOccurred('error');
+                document.getElementById('hardInput').style.border = "2px solid #f44336";
+                document.getElementById('hardInput').value = "";
+                document.getElementById('hardInput').placeholder = "Неверно, попробуй еще!";
             }
         }
 
