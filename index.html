@@ -1,4 +1,24 @@
-transition: 0.3s; padding: 5px 10px; }
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Pro Bot</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg: var(--tg-theme-bg-color, #ffffff);
+            --text: var(--tg-theme-text-color, #222222);
+            --hint: var(--tg-theme-hint-color, #999999);
+            --btn: var(--tg-theme-button-color, #3390ec);
+            --btn-text: var(--tg-theme-button-text-color, #ffffff);
+            --sec-bg: var(--tg-theme-secondary-bg-color, #f4f4f7);
+        }
+
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text); padding: 15px; margin: 0; line-height: 1.5; padding-bottom: 40px; }
+        
+        .nav { display: flex; justify-content: space-around; background: var(--bg); border-bottom: 1px solid rgba(0,0,0,0.1); padding: 10px 0; position: sticky; top: 0; z-index: 100; }
+        .nav span { cursor: pointer; font-size: 14px; font-weight: 600; opacity: 0.5; transition: 0.3s; padding: 5px 10px; }
         .nav span.active { opacity: 1; color: var(--btn); border-bottom: 2px solid var(--btn); }
 
         h2 { font-size: 22px; margin: 20px 0 10px; }
@@ -35,7 +55,6 @@ transition: 0.3s; padding: 5px 10px; }
 
     <div id="grammar">
         <h2>Грамматика (16)</h2>
-
         <div class="category" onclick="toggleFolder('pres-folder')">PRESENT (Настоящее) <span>▼</span></div>
         <div id="pres-folder" class="subcategory-list hidden">
             <div class="grammar-card">
@@ -110,18 +129,10 @@ transition: 0.3s; padding: 5px 10px; }
 
         <div class="category" onclick="toggleFolder('fip-folder')">FUTURE IN THE PAST <span>▼</span></div>
         <div id="fip-folder" class="subcategory-list hidden">
-            <div class="grammar-card">
-                <h4>Simple</h4><p>Будущее из прошлого.</p><code>would + V</code><i>I said I would study.</i>
-            </div>
-            <div class="grammar-card">
-                <h4>Continuous</h4><code>would be + V-ing</code><i>He said he would be studying.</i>
-            </div>
-            <div class="grammar-card">
-                <h4>Perfect</h4><code>would have + V3</code><i>I would have studied.</i>
-            </div>
-            <div class="grammar-card">
-                <h4>Perfect Continuous</h4><code>would have been + V-ing</code><i>I would have been studying.</i>
-            </div>
+            <div class="grammar-card"><h4>Simple</h4><code>would + V</code><i>I said I would study.</i></div>
+            <div class="grammar-card"><h4>Continuous</h4><code>would be + V-ing</code><i>He said he would be studying.</i></div>
+            <div class="grammar-card"><h4>Perfect</h4><code>would have + V3</code><i>I would have studied.</i></div>
+            <div class="grammar-card"><h4>Perfect Continuous</h4><code>would have been + V-ing</code><i>I would have been studying.</i></div>
         </div>
     </div>
 
@@ -158,6 +169,7 @@ transition: 0.3s; padding: 5px 10px; }
         let testQueue = [];
         let currentCorrect = "";
         let testMode = 'easy';
+        let hintIndex = 0;
 
         function showTab(tabId) {
             tg.HapticFeedback.impactOccurred('light');
@@ -226,6 +238,7 @@ transition: 0.3s; padding: 5px 10px; }
             if (testQueue.length === 0) testQueue = [...words].sort(() => Math.random() - 0.5);
             let correct = testQueue.pop();
             currentCorrect = correct.ru;
+            hintIndex = 0;
             document.getElementById('questionWord').innerText = correct.en;
 
             if (testMode === 'easy') {
@@ -239,6 +252,7 @@ transition: 0.3s; padding: 5px 10px; }
             } else {
                 content.innerHTML = `
                     <input type="text" id="hardInput" placeholder="Введите перевод..." autocomplete="off">
+                    <div id="hintText" style="margin-top: 10px; color: var(--btn); font-weight: bold; min-height: 24px;"></div>
                     <button class="btn" onclick="checkHard()">Проверить</button>
                 `;
                 const inp = document.getElementById('hardInput');
@@ -260,17 +274,22 @@ transition: 0.3s; padding: 5px 10px; }
 
         function checkHard() {
             const inp = document.getElementById('hardInput');
+            const hText = document.getElementById('hintText');
             const val = inp.value.trim().toLowerCase();
             const correct = currentCorrect.toLowerCase();
+
             if (val === correct) {
                 tg.HapticFeedback.notificationOccurred('success');
                 inp.style.border = "2px solid #4caf50";
+                hText.innerText = "Правильно!";
                 setTimeout(startTest, 600);
             } else {
                 tg.HapticFeedback.notificationOccurred('error');
                 inp.style.border = "2px solid #f44336";
+                hintIndex++;
+                hText.innerText = "Подсказка: " + currentCorrect.substring(0, hintIndex) + "...";
                 inp.value = "";
-                inp.placeholder = "Неверно!";
+                inp.placeholder = "Ошибка!";
             }
         }
 
