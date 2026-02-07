@@ -14,15 +14,15 @@
         .nav span { cursor: pointer; font-weight: bold; opacity: 0.6; }
         .nav span.active { opacity: 1; border-bottom: 2px solid var(--tg-theme-button-color, #3390ec); }
         
-        /* Стили для грамматики */
+        /* Стили для грамматики (16 времен) */
         .category { background: var(--tg-theme-button-color, #3390ec); color: #fff; padding: 15px; margin-top: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; display: flex; justify-content: space-between; }
         .subcategory-list { padding-left: 10px; border-left: 3px solid var(--tg-theme-button-color, #3390ec); margin-top: 5px; margin-bottom: 15px; }
         .grammar-card { background: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.05)); padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); }
         .grammar-card h4 { margin: 0 0 5px 0; color: var(--tg-theme-button-color, #3390ec); font-size: 16px; }
-        .grammar-card code { background: #e0e0e0; padding: 2px 4px; border-radius: 4px; font-size: 13px; color: #d63384; }
+        .grammar-card code { background: rgba(0,0,0,0.1); padding: 2px 4px; border-radius: 4px; font-size: 13px; color: #d63384; }
 
-        .card { background: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.05)); padding: 15px; margin-bottom: 10px; border-radius: 12px; position: relative; }
-        .delete-btn { position: absolute; right: 12px; top: 15px; color: #ff4d4d; cursor: pointer; font-size: 18px; }
+        .card { background: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.05)); padding: 15px; margin-bottom: 10px; border-radius: 12px; position: relative; border: 1px solid rgba(0,0,0,0.1); }
+        .delete-btn { position: absolute; right: 12px; top: 15px; color: #ff4d4d; cursor: pointer; font-size: 20px; font-weight: bold; padding: 0 5px; }
     </style>
 </head>
 <body>
@@ -38,34 +38,34 @@
 
         <div class="category" onclick="toggleFolder('pres-folder')">PRESENT (Настоящее) <span>▼</span></div>
         <div id="pres-folder" class="subcategory-list hidden">
-            <div class="grammar-card"><h4>Simple</h4><p>Факт, привычка. <code>V / V-s</code><br><i>I study every day.</i></p></div>
+            <div class="grammar-card"><h4>Simple</h4><p>Факт. <code>V / V-s</code><br><i>I study every day.</i></p></div>
             <div class="grammar-card"><h4>Continuous</h4><p>Сейчас. <code>am/is/are + V-ing</code><br><i>I am studying now.</i></p></div>
-            <div class="grammar-card"><h4>Perfect</h4><p>Результат к моменту. <code>have/has + V3</code><br><i>I have already studied.</i></p></div>
-            <div class="grammar-card"><h4>Perfect Continuous</h4><p>Длительность. <code>have been + V-ing</code><br><i>I have been studying for 2 hours.</i></p></div>
+            <div class="grammar-card"><h4>Perfect</h4><p>Результат. <code>have/has + V3</code><br><i>I have studied.</i></p></div>
+            <div class="grammar-card"><h4>Perfect Continuous</h4><p>Длительность. <code>have been + V-ing</code><br><i>I have been studying.</i></p></div>
         </div>
 
         <div class="category" onclick="toggleFolder('past-folder')">PAST (Прошлое) <span>▼</span></div>
         <div id="past-folder" class="subcategory-list hidden">
-            <div class="grammar-card"><h4>Simple</h4><p>В прошлом. <code>V2 / -ed</code><br><i>I studied yesterday.</i></p></div>
-            <div class="grammar-card"><h4>Continuous</h4><p>Процесс в прошлом. <code>was/were + V-ing</code><br><i>I was studying at 5 PM.</i></p></div>
-            <div class="grammar-card"><h4>Perfect</h4><p>До другого действия. <code>had + V3</code><br><i>I had studied before he came.</i></p></div>
-            <div class="grammar-card"><h4>Perfect Continuous</h4><p>Процесс до момента в прошлом. <code>had been + V-ing</code><br><i>I had been studying for an hour.</i></p></div>
+            <div class="grammar-card"><h4>Simple</h4><p>В прошлом. <code>V2 / -ed</code><br><i>I studied.</i></p></div>
+            <div class="grammar-card"><h4>Continuous</h4><p>Процесс. <code>was/were + V-ing</code><br><i>I was studying.</i></p></div>
+            <div class="grammar-card"><h4>Perfect</h4><p>До момента. <code>had + V3</code><br><i>I had studied.</i></p></div>
+            <div class="grammar-card"><h4>Perfect Continuous</h4><p>Долго до момента. <code>had been + V-ing</code><br><i>I had been studying.</i></p></div>
         </div>
 
         <div class="category" onclick="toggleFolder('fut-folder')">FUTURE (Будущее) <span>▼</span></div>
         <div id="fut-folder" class="subcategory-list hidden">
-            <div class="grammar-card"><h4>Simple</h4><p>Обещание, прогноз. <code>will + V</code><br><i>I will study tomorrow.</i></p></div>
-            <div class="grammar-card"><h4>Continuous</h4><p>Процесс в будущем. <code>will be + V-ing</code><br><i>I will be studying all evening.</i></p></div>
-            <div class="grammar-card"><h4>Perfect</h4><p>Будет сделано к сроку. <code>will have + V3</code><br><i>I will have studied by Monday.</i></p></div>
-            <div class="grammar-card"><h4>Perfect Continuous</h4><p>Как долго будет длиться. <code>will have been + V-ing</code><br><i>I will have been studying for 3 years.</i></p></div>
+            <div class="grammar-card"><h4>Simple</h4><p>Будет. <code>will + V</code><br><i>I will study.</i></p></div>
+            <div class="grammar-card"><h4>Continuous</h4><p>Будет длиться. <code>will be + V-ing</code><br><i>I will be studying.</i></p></div>
+            <div class="grammar-card"><h4>Perfect</h4><p>Сделаю к... <code>will have + V3</code><br><i>I will have studied.</i></p></div>
+            <div class="grammar-card"><h4>Perfect Continuous</h4><p>Буду учить уже... <code>will have been + V-ing</code><br><i>I will have been studying.</i></p></div>
         </div>
 
         <div class="category" onclick="toggleFolder('fip-folder')">FUTURE IN THE PAST <span>▼</span></div>
         <div id="fip-folder" class="subcategory-list hidden">
-            <div class="grammar-card"><h4>Simple</h4><p>Будущее из прошлого. <code>would + V</code><br><i>I said I would study.</i></p></div>
-            <div class="grammar-card"><h4>Continuous</h4><p>Процесс (из прошлого). <code>would be + V-ing</code><br><i>I said I would be studying.</i></p></div>
-            <div class="grammar-card"><h4>Perfect</h4><p>Результат (из прошлого). <code>would have + V3</code><br><i>I would have studied.</i></p></div>
-            <div class="grammar-card"><h4>Perfect Continuous</h4><p>Длительность (из прошлого). <code>would have been + V-ing</code><br><i>I would have been studying.</i></p></div>
+            <div class="grammar-card"><h4>Simple</h4><p><code>would + V</code></p></div>
+            <div class="grammar-card"><h4>Continuous</h4><p><code>would be + V-ing</code></p></div>
+            <div class="grammar-card"><h4>Perfect</h4><p><code>would have + V3</code></p></div>
+            <div class="grammar-card"><h4>Perfect Continuous</h4><p><code>would have been + V-ing</code></p></div>
         </div>
     </div>
 
@@ -74,7 +74,7 @@
         <input type="text" id="engInput" placeholder="English word">
         <input type="text" id="ruInput" placeholder="Перевод">
         <button class="btn" onclick="addWord()">Добавить в облако</button>
-        <div id="wordList" style="margin-top: 20px;">Загрузка слов...</div>
+        <div id="wordList" style="margin-top: 20px;">Загрузка...</div>
     </div>
 
     <div id="test" class="hidden">
@@ -87,6 +87,7 @@
     </div>
 
     <script>
+        // ТВОЯ ССЫЛКА ИЗ FIREBASE
         const DB_URL = 'https://englishteach-tg-bot-default-rtdb.europe-west1.firebasedatabase.app/'; 
         
         let tg = window.Telegram.WebApp;
@@ -122,28 +123,35 @@
             }
         }
 
+        // ИСПРАВЛЕННОЕ УДАЛЕНИЕ
         async function deleteWord(wordId) {
-            await fetch(`${DB_URL}users/${userId}/words/${wordId}.json`, { method: 'DELETE' });
-            renderWords();
+            tg.showConfirm("Удалить это слово?", async (isConfirmed) => {
+                if (isConfirmed) {
+                    await fetch(`${DB_URL}users/${userId}/words/${wordId}.json`, { method: 'DELETE' });
+                    renderWords();
+                }
+            });
         }
 
         async function renderWords() {
             const list = document.getElementById('wordList');
-            const response = await fetch(`${DB_URL}users/${userId}/words.json`);
-            const data = await response.json();
-            words = [];
-            list.innerHTML = '';
-            if (data) {
-                Object.keys(data).forEach(key => { words.push({ id: key, ...data[key] }); });
-                list.innerHTML = words.map(w => `
-                    <div class="card">
-                        <b>${w.en}</b> — ${w.ru}
-                        <span class="delete-btn" onclick="deleteWord('${w.id}')">×</span>
-                    </div>
-                `).reverse().join('');
-            } else {
-                list.innerHTML = '<p style="text-align:center; opacity:0.5;">Словарь пока пуст</p>';
-            }
+            try {
+                const response = await fetch(`${DB_URL}users/${userId}/words.json`);
+                const data = await response.json();
+                words = [];
+                list.innerHTML = '';
+                if (data) {
+                    Object.keys(data).forEach(key => { words.push({ id: key, ...data[key] }); });
+                    list.innerHTML = words.map(w => `
+                        <div class="card">
+                            <b>${w.en}</b> — ${w.ru}
+                            <span class="delete-btn" onclick="deleteWord('${w.id}')">×</span>
+                        </div>
+                    `).reverse().join('');
+                } else {
+                    list.innerHTML = '<p style="text-align:center; opacity:0.5;">Словарь пуст</p>';
+                }
+            } catch (e) { list.innerHTML = 'Ошибка базы'; }
         }
 
         function startTest() {
