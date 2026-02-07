@@ -55,6 +55,7 @@
 
     <div id="grammar">
         <h2>Грамматика (16)</h2>
+
         <div class="category" onclick="toggleFolder('pres-folder')">PRESENT (Настоящее) <span>▼</span></div>
         <div id="pres-folder" class="subcategory-list hidden">
             <div class="grammar-card">
@@ -129,10 +130,18 @@
 
         <div class="category" onclick="toggleFolder('fip-folder')">FUTURE IN THE PAST <span>▼</span></div>
         <div id="fip-folder" class="subcategory-list hidden">
-            <div class="grammar-card"><h4>Simple</h4><code>would + V</code><i>I said I would study.</i></div>
-            <div class="grammar-card"><h4>Continuous</h4><code>would be + V-ing</code><i>He said he would be studying.</i></div>
-            <div class="grammar-card"><h4>Perfect</h4><code>would have + V3</code><i>I would have studied.</i></div>
-            <div class="grammar-card"><h4>Perfect Continuous</h4><code>would have been + V-ing</code><i>I would have been studying.</i></div>
+            <div class="grammar-card">
+                <h4>Simple</h4><p>Будущее из прошлого.</p><code>would + V</code><i>I said I would study.</i>
+            </div>
+            <div class="grammar-card">
+                <h4>Continuous</h4><code>would be + V-ing</code><i>He said he would be studying.</i>
+            </div>
+            <div class="grammar-card">
+                <h4>Perfect</h4><code>would have + V3</code><i>I would have studied.</i>
+            </div>
+            <div class="grammar-card">
+                <h4>Perfect Continuous</h4><code>would have been + V-ing</code><i>I would have been studying.</i>
+            </div>
         </div>
     </div>
 
@@ -169,7 +178,6 @@
         let testQueue = [];
         let currentCorrect = "";
         let testMode = 'easy';
-        let hintIndex = 0;
 
         function showTab(tabId) {
             tg.HapticFeedback.impactOccurred('light');
@@ -238,7 +246,6 @@
             if (testQueue.length === 0) testQueue = [...words].sort(() => Math.random() - 0.5);
             let correct = testQueue.pop();
             currentCorrect = correct.ru;
-            hintIndex = 0;
             document.getElementById('questionWord').innerText = correct.en;
 
             if (testMode === 'easy') {
@@ -252,7 +259,6 @@
             } else {
                 content.innerHTML = `
                     <input type="text" id="hardInput" placeholder="Введите перевод..." autocomplete="off">
-                    <div id="hintText" style="margin-top: 10px; color: var(--btn); font-weight: bold; min-height: 24px;"></div>
                     <button class="btn" onclick="checkHard()">Проверить</button>
                 `;
                 const inp = document.getElementById('hardInput');
@@ -274,22 +280,17 @@
 
         function checkHard() {
             const inp = document.getElementById('hardInput');
-            const hText = document.getElementById('hintText');
             const val = inp.value.trim().toLowerCase();
             const correct = currentCorrect.toLowerCase();
-
             if (val === correct) {
                 tg.HapticFeedback.notificationOccurred('success');
                 inp.style.border = "2px solid #4caf50";
-                hText.innerText = "Правильно!";
                 setTimeout(startTest, 600);
             } else {
                 tg.HapticFeedback.notificationOccurred('error');
                 inp.style.border = "2px solid #f44336";
-                hintIndex++;
-                hText.innerText = "Подсказка: " + currentCorrect.substring(0, hintIndex) + "...";
                 inp.value = "";
-                inp.placeholder = "Ошибка!";
+                inp.placeholder = "Неверно!";
             }
         }
 
