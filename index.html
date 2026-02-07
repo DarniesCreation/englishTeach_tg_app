@@ -32,16 +32,21 @@
         .grammar-card h4 { margin: 0 0 8px 0; color: var(--btn); font-size: 17px; display: flex; align-items: center; }
         .grammar-card h4::before { content: "•"; margin-right: 8px; font-size: 20px; }
         .grammar-card code { display: block; background: rgba(0,0,0,0.05); padding: 8px; border-radius: 6px; margin: 8px 0; font-size: 13px; color: #d63384; border-left: 3px solid #d63384; }
+        
+        /* Исправленный стиль примеров (ЯРКИЙ) */
         .grammar-card i { 
             display: block;
             color: var(--text); 
             font-size: 14px; 
-            opacity: 0.9; 
-            border-left: 2px solid var(--btn);
-            padding-left: 8px;
-            margin-top: 5px;
+            opacity: 1; 
+            border-left: 3px solid var(--btn);
+            padding-left: 10px;
+            margin-top: 10px;
             font-style: italic;
-            }
+            background: rgba(51, 144, 236, 0.05);
+            padding: 8px 10px;
+            border-radius: 0 8px 8px 0;
+        }
 
         /* Словарь */
         .input-group { background: var(--sec-bg); padding: 15px; border-radius: 15px; margin-bottom: 20px; }
@@ -152,25 +157,16 @@
         <div class="category" onclick="toggleFolder('fip-folder')">FUTURE IN THE PAST <span>▼</span></div>
         <div id="fip-folder" class="subcategory-list hidden">
             <div class="grammar-card">
-                <h4>Simple</h4>
-                <p>Будущее из точки в прошлом.</p>
-                <code>All subjects + would + V</code>
-                <i>I said I would study.</i>
+                <h4>Simple</h4><p>Будущее из прошлого.</p><code>would + V</code><i>I said I would study.</i>
             </div>
             <div class="grammar-card">
-                <h4>Continuous</h4>
-                <code>All subjects + would be + V-ing</code>
-                <i>He said he would be studying.</i>
+                <h4>Continuous</h4><code>would be + V-ing</code><i>He said he would be studying.</i>
             </div>
             <div class="grammar-card">
-                <h4>Perfect</h4>
-                <code>All subjects + would have + V3</code>
-                <i>I would have studied, but I was tired.</i>
+                <h4>Perfect</h4><code>would have + V3</code><i>I would have studied.</i>
             </div>
             <div class="grammar-card">
-                <h4>Perfect Continuous</h4>
-                <code>All subjects + would have been + V-ing</code>
-                <i>I would have been studying.</i>
+                <h4>Perfect Continuous</h4><code>would have been + V-ing</code><i>I would have been studying.</i>
             </div>
         </div>
     </div>
@@ -178,7 +174,7 @@
     <div id="words" class="hidden">
         <h2>Мой словарь</h2>
         <div class="input-group">
-            <input type="text" id="engInput" placeholder="English word or phrase...">
+            <input type="text" id="engInput" placeholder="English word...">
             <input type="text" id="ruInput" placeholder="Перевод...">
             <button class="btn" onclick="addWord()">Добавить в список</button>
         </div>
@@ -199,7 +195,9 @@
         let tg = window.Telegram.WebApp;
         tg.expand();
         const userId = tg.initDataUnsafe.user?.id || "guest";
+        
         let words = [];
+        let testQueue = []; // Очередь для теста без повторов
 
         function showTab(tabId) {
             tg.HapticFeedback.impactOccurred('light');
@@ -208,7 +206,10 @@
             document.getElementById(tabId).classList.remove('hidden');
             document.getElementById('nav-' + tabId).classList.add('active');
             if(tabId === 'words') renderWords();
-            if(tabId === 'test') startTest();
+            if(tabId === 'test') {
+                testQueue = []; // Сбрасываем очередь при входе в тест
+                startTest();
+            }
         }
 
         function toggleFolder(id) {
@@ -260,19 +261,28 @@
             }
         }
 
+        // ТЕСТ БЕЗ ПОВТОРОВ
         function startTest() {
             const area = document.getElementById('testArea');
             if (words.length < 3) {
-                area.innerHTML = "<p>Добавь хотя бы 3 слова!</p>";
+                area.innerHTML = "<p>Добавь хотя бы 3 слова для начала теста!</p>";
                 return;
             }
-            let correct = words[Math.floor(Math.random() * words.length)];
-            let options = [correct];
-            while(options.length < 3) {
-                let random = words[Math.floor(Math.random() * words.length)];
-                if (!options.find(o => o.id === random.id)) options.push(random);
+
+            // Если очередь пуста, наполняем её заново
+            if (testQueue.length === 0) {
+                testQueue = [...words].sort(() => Math.random() - 0.5);
             }
+
+            // Достаем слово
+            let correct = testQueue.pop();
+            
+            // Варианты ответов
+            let options = [correct];
+            let others = words.filter(w => w.id !== correct.id).sort(() => Math.random() - 0.5);
+            options.push(others[0], others[1]);
             options.sort(() => Math.random() - 0.5);
+
             document.getElementById('questionWord').innerText = correct.en;
             document.getElementById('answers').innerHTML = options.map(opt => 
                 `<button class="btn" style="background:var(--bg); color:var(--text); margin-bottom:10px; border:1px solid rgba(0,0,0,0.1);" onclick="checkAnswer('${opt.ru}', '${correct.ru}', this)">${opt.ru}</button>`
